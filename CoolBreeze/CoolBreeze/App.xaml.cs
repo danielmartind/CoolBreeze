@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using CoolBreeze.ViewModels;
 using Xamarin.Forms;
 
 namespace CoolBreeze
 {
     public partial class App : Application
     {
+        public static MainViewModel ViewModel;
+        public static string RegistrationCode = "XBWWEDFC7FF8991A628E64719040C57B";
         public App()
         {
             InitializeComponent();
