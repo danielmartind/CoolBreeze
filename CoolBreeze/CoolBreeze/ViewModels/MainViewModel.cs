@@ -1,89 +1,96 @@
-﻿
-using CoolBreeze.Common;
+﻿using CoolBreeze.Common;
+using CoolBreeze.Helpers;
 using CoolBreeze.Models;
 
 namespace CoolBreeze.ViewModels
 {
     public class MainViewModel : ObservableBase
     {
-        public MainViewModel()
-        {
-            this.IsBusy = true;
-            this.NeedsRefresh = true;
-            this.LocationType = LocationType.City;
-            this.CityName = "Amsterdam";
-            this.CountryCode = "HL";
-            this.CurrentConditions = new WeatherInformation();
-        }
-
-        private LocationType _locationType;
-        public LocationType LocationType
-        {
-            get { return this._locationType; }
-            set { this.SetProperty(ref this._locationType, value); }
-        }
-
-        private string _postalCode;
-        public string PostalCode
-        {
-            get { return this._postalCode; }
-            set { this.SetProperty(ref this._postalCode, value); }
-        }
-
         private string _cityName;
-        public string CityName
-        {
-            get { return this._cityName; }
-            set { this.SetProperty(ref this._cityName, value); }
-        }
 
         private string _countryCode;
-        public string CountryCode
-        {
-            get { return this._countryCode; }
-            set { this.SetProperty(ref this._countryCode, value); }
-        }
 
         private WeatherInformation _currentConditions;
-        public WeatherInformation CurrentConditions
-        {
-            get { return this._currentConditions; }
-            set { this.SetProperty(ref this._currentConditions, value); }
-        }
-
-        private bool _needsRefresh;
-        public bool NeedsRefresh
-        {
-            get { return this._needsRefresh || string.IsNullOrEmpty(this._currentConditions.Conditions); }
-            set { this.SetProperty(ref this._needsRefresh, value); }
-        }
 
         private bool _isBusy;
+
+        private LocationType _locationType;
+
+        private bool _needsRefresh;
+
+        private string _postalCode;
+
+        public MainViewModel()
+        {
+            IsBusy = true;
+            NeedsRefresh = true;
+            LocationType = LocationType.City;
+            CityName = "Amsterdam";
+            CountryCode = "HL";
+            CurrentConditions = new WeatherInformation();
+        }
+
+        public LocationType LocationType
+        {
+            get { return _locationType; }
+            set { SetProperty(ref _locationType, value); }
+        }
+
+        public string PostalCode
+        {
+            get { return _postalCode; }
+            set { SetProperty(ref _postalCode, value); }
+        }
+
+        public string CityName
+        {
+            get { return _cityName; }
+            set { SetProperty(ref _cityName, value); }
+        }
+
+        public string CountryCode
+        {
+            get { return _countryCode; }
+            set { SetProperty(ref _countryCode, value); }
+        }
+
+        public WeatherInformation CurrentConditions
+        {
+            get { return _currentConditions; }
+            set { SetProperty(ref _currentConditions, value); }
+        }
+
+        public bool NeedsRefresh
+        {
+            get { return _needsRefresh || string.IsNullOrEmpty(_currentConditions.Conditions); }
+            set { SetProperty(ref _needsRefresh, value); }
+        }
+
         public bool IsBusy
         {
-            get { return this._isBusy; }
-            set { this.SetProperty(ref this._isBusy, value); }
+            get { return _isBusy; }
+            set { SetProperty(ref _isBusy, value); }
         }
 
         public async void RefreshCurrentConditionsAsync()
         {
-            this.IsBusy = true;
-            this.NeedsRefresh = false;
+            IsBusy = true;
+            NeedsRefresh = false;
 
-            WeatherInformation results = await Helpers.WeatherHelper.GetCurrentConditionsAsync(this.CityName, this.CountryCode);
+            var results = await WeatherHelper.GetCurrentConditionsAsync(CityName, CountryCode);
 
-            this.CurrentConditions.Conditions = results.Conditions;
-            this.CurrentConditions.Description = results.Description;
-            this.CurrentConditions.DisplayName = results.DisplayName;
-            this.CurrentConditions.Icon = results.Icon;
-            this.CurrentConditions.Id = results.Id;
-            this.CurrentConditions.MaxTemperature = results.MaxTemperature;
-            this.CurrentConditions.MinTemperature = results.MinTemperature;
-            this.CurrentConditions.Temperature = results.Temperature;
-            this.CurrentConditions.Humidity = results.Humidity;
-            this.CurrentConditions.TimeStamp = results.TimeStamp.ToLocalTime();
+            CurrentConditions.Conditions = results.Conditions;
+            CurrentConditions.Description = results.Description;
+            CurrentConditions.DisplayName = results.DisplayName;
+            CurrentConditions.Icon = results.Icon;
+            CurrentConditions.Id = results.Id;
+            CurrentConditions.MaxTemperature = results.MaxTemperature;
+            CurrentConditions.MinTemperature = results.MinTemperature;
+            CurrentConditions.Temperature = results.Temperature;
+            CurrentConditions.Humidity = results.Humidity;
+            CurrentConditions.TimeStamp = results.TimeStamp.ToLocalTime();
 
-            this.IsBusy = false;
+            IsBusy = false;
         }
     }
 }
